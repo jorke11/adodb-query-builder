@@ -61,20 +61,38 @@ class QueryBuilder {
     static async where(conditionals) {
         let wh = "WHERE "
         for (const attr in conditionals) {
-            wh += (wh === '') ? '' : ' AND '
+            wh += (wh === 'WHERE ') ? '' : ' AND '
             wh += attr + " = " + conditionals[attr]
         }
 
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
         console.log('this.query',this.query);
-        return await conn.query(this.query)
+        return await ConnectDB.connection.query(this.query)
         .catch(err=>{
             console.log('err',err);
         })
     }
 
-    static update(values, where) {
+    static async find(conditionals) {
+        let wh = "WHERE "
+        for (const attr in conditionals) {
+            wh += (wh === 'WHERE ') ? '' : ' AND '
+            wh += attr + " = " + conditionals[attr]
+        }
+
+        this.query = `SELECT * FROM ${this.tableName} ${wh};`;
+        console.log('this.query',this.query);
+        let result = await ConnectDB.connection.query(this.query)
+        .catch(err=>{
+            console.log('err',err);
+        })
+
+        return result[0]
+    }
+
+    static async update(values, where) {
         let { tableName } = this
+    
 
         let wh = "WHERE ", setValues = ''
 
@@ -84,12 +102,19 @@ class QueryBuilder {
         }
 
         for (const attr in values) {
+            let val = (typeof values[attr]==='string')?`'${values[attr]}'`:values[attr]
+            
             setValues += (setValues === '') ? '' : ', '
-            setValues += attr + " = " + values[attr]
+            setValues += attr + " = " + val
         }
 
-        this.query = `UPDATE ${tableName} ${setValues} ${wh}`
-        return this
+        this.query = `UPDATE ${tableName} SET ${setValues} ${wh}`
+        await ConnectDB.connection.execute(this.query)
+        .catch(err=>{
+            console.log('err',err);
+        })
+        
+        return where
     }
 
     static toSql() {
