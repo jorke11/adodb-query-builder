@@ -6,8 +6,9 @@ class ConnectDB {
        this.connection ='' ;
    }
 
-   static connect(){
-       this.connection = ADODB.open(STRING_CONNECTION)
+   static connect(string_connection){
+       string_connection =  string_connection || STRING_CONNECTION
+       this.connection = ADODB.open(string_connection)
    }
 }
 
