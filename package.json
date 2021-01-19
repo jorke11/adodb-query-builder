@@ -1,6 +1,6 @@
 {
   "name": "adodb-query-builder",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Query build for Ms Access",
   "main": "src/index.js",
   "dependencies": {
