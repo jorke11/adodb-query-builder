@@ -83,15 +83,28 @@ class QueryBuilder {
         })
     }
 
-    static async whereBetween(conditionals) {
+    static async whereBetween(conditionals,order_by=[]) {
         
         let field = Object.keys(conditionals)[0];
 
+        let orderBy=''
+
+        if(order_by.length>0){
+            orderBy = ""
+            for(const order of order_by){
+                let key= Object.keys(order)[0]
+                orderBy+=(orderBy=='')?'':','
+                orderBy+=`${key} ${order[key]}` 
+            }
+            orderBy=`ORDER BY ${orderBy}` 
+            
+        }        
+
         let wh = `WHERE ${field} >= #${conditionals[field].start}# and ${field}<=#${conditionals[field].end}#`
-        
     
-        this.query = `SELECT * FROM ${this.tableName} ${wh};`;
+        this.query = `SELECT * FROM ${this.tableName} ${wh} ${orderBy};`;
         console.log('this.query',this.query);
+
         return await ConnectDB.connection.query(this.query)
         .catch(err=>{
             console.log('err',err);

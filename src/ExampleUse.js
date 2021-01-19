@@ -24,9 +24,8 @@ async function update(){
 
 async function where(){
     let order = await OrderHeaders.whereBetween(
-        {OrderDateTime:{start:'2021-01-19',end:'2021-01-20'}});
-    
-    console.log('order',order);
+        {OrderDateTime:{start:'2021-01-19',end:'2021-01-20'}},[{"OrderId":"DESC"}]);
+    //console.log('order',order);
 }
 
 
