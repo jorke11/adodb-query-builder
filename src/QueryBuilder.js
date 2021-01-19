@@ -127,6 +127,7 @@ class QueryBuilder {
         }
 
         this.query = `UPDATE ${tableName} SET ${setValues} ${wh}`
+        console.log('this.query',this.query);
         await ConnectDB.connection.execute(this.query)
         .catch(err=>{
             console.log('err',err);
