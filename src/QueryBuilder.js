@@ -1,4 +1,5 @@
 const moment = require("moment")
+const {v4: uuidv4} = require("uuid")
 
 const ConnectDB = require("./ConnectDB")
 
@@ -14,14 +15,18 @@ class QueryBuilder {
         }
 
         if (type === 'datetime') {
-            obj.value = moment().format("YYYY-MM-DD H:mm")
+            obj.value = moment().format("YYYY-MM-DD HH:mm:ss")
+        }
+
+        if (type === 'uuid') {
+            obj.value = `{${uuidv4()}}`
         }
 
         return obj
     }
 
 
-    save() {
+    async save() {
         let query = '('
         let values = '('
         for (const attr in this) {
@@ -40,12 +45,20 @@ class QueryBuilder {
         query += 'values ' + values
 
 
-        this.query = `INSERT INTO ${this.constructor.tableName} ${query}`
+        this.query = `INSERT INTO ${this.constructor.tableName} ${query};`
         console.log('this.query',this.query)
-        console.log('ConnectDB',ConnectDB)
+        const result = await ConnectDB.connection.execute(this.query,"SELECT @@Identity as id")
+        .catch(err=>{
+            console.log('err',err);
+        })
+
+        return result[0].id
+        
+        
+
     }
 
-    static where(conditionals) {
+    static async where(conditionals) {
         let wh = "WHERE "
         for (const attr in conditionals) {
             wh += (wh === '') ? '' : ' AND '
@@ -53,6 +66,11 @@ class QueryBuilder {
         }
 
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
+        console.log('this.query',this.query);
+        return await conn.query(this.query)
+        .catch(err=>{
+            console.log('err',err);
+        })
     }
 
     static update(values, where) {
