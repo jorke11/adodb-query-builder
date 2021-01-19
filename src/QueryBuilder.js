@@ -27,23 +27,41 @@ class QueryBuilder {
 
 
     async save() {
+        console.log('this',this);
+
         let query = '('
         let values = '('
         for (const attr in this) {
-            let { value, type } = this[attr]
+            if(attr!=='query'){
+                let { value, type } = this[attr]
 
-            if (value !== undefined) {
-                query += (query === '(') ? '' : ','
-                query += attr
-                values += (values === '(') ? '' : ','
-                values += (type === 'integer') ? this[attr].value : `'${this[attr].value}'`
+                console.log('this[attr]',this[attr]);
+                
+                if (value !== undefined) {
+                    query += (query === '(') ? '' : ','
+                    query += attr
+                    values += (values === '(') ? '' : ','
+                    values += (type === 'integer') ? this[attr].value : `'${this[attr].value}'`
+                }else{
+                    if(type===undefined){
+                        console.log('attr',attr);
+                        console.log('this[attr]',this[attr]);
+                        query += (query === '(') ? '' : ','
+                        query += attr
+                        values += (values === '(') ? '' : ','
+                        values +=  `'${this[attr]}'`
+                    }
+                }
             }
+            
+
+        
+
         }
 
         query += ") "
         values += ") "
         query += 'values ' + values
-
 
         this.query = `INSERT INTO ${this.constructor.tableName} ${query};`
         console.log('this.query',this.query)

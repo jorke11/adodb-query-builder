@@ -1,7 +1,7 @@
 const QueryBuilder = require("./QueryBuilder")
 
-class OrderHeaders extends QueryBuilder {
-    static tableName = "OrderHeaders"
+class OrdersHeaders extends QueryBuilder {
+    static tableName = "OrdersHeaders"
 
     constructor() {
         super()
@@ -21,7 +21,8 @@ class OrderHeaders extends QueryBuilder {
         this.SubTotal = this.Column('integer',0)
         this.RowGUID = this.Column('uuid')
     }
+
 }
 
 
-module.exports = OrderHeaders
+module.exports = OrdersHeaders

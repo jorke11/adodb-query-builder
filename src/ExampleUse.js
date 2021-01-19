@@ -22,8 +22,17 @@ async function update(){
     console.log('order',order);
 }
 
+
+async function create(){
+    let order = new OrderHeaders();
+    order.CustomerName="test customer name"
+    order.DeliveryAddress="adddress"
+    order.save()
+    console.log('order',order);
+}
+
 (async()=>{
-    await update()
+    await create()
 })()
 
 
