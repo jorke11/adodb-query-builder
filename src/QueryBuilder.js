@@ -27,15 +27,12 @@ class QueryBuilder {
 
 
     async save() {
-        console.log('this',this);
-
+    
         let query = '('
         let values = '('
         for (const attr in this) {
             if(attr!=='query'){
                 let { value, type } = this[attr]
-
-                console.log('this[attr]',this[attr]);
                 
                 if (value !== undefined) {
                     query += (query === '(') ? '' : ','
@@ -44,8 +41,6 @@ class QueryBuilder {
                     values += (type === 'integer') ? this[attr].value : `'${this[attr].value}'`
                 }else{
                     if(type===undefined){
-                        console.log('attr',attr);
-                        console.log('this[attr]',this[attr]);
                         query += (query === '(') ? '' : ','
                         query += attr
                         values += (values === '(') ? '' : ','
@@ -53,10 +48,7 @@ class QueryBuilder {
                     }
                 }
             }
-            
-
         
-
         }
 
         query += ") "
@@ -83,6 +75,21 @@ class QueryBuilder {
             wh += attr + " = " + conditionals[attr]
         }
 
+        this.query = `SELECT * FROM ${this.tableName} ${wh};`;
+        console.log('this.query',this.query);
+        return await ConnectDB.connection.query(this.query)
+        .catch(err=>{
+            console.log('err',err);
+        })
+    }
+
+    static async whereBetween(conditionals) {
+        
+        let field = Object.keys(conditionals)[0];
+
+        let wh = `WHERE ${field} >= #${conditionals[field].start}# and ${field}<=#${conditionals[field].end}#`
+        
+    
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
         console.log('this.query',this.query);
         return await ConnectDB.connection.query(this.query)

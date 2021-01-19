@@ -22,6 +22,13 @@ async function update(){
     console.log('order',order);
 }
 
+async function where(){
+    let order = await OrderHeaders.whereBetween(
+        {OrderDateTime:{start:'2021-01-19',end:'2021-01-20'}});
+    
+    console.log('order',order);
+}
+
 
 async function create(){
     let order = new OrderHeaders();
@@ -32,7 +39,7 @@ async function create(){
 }
 
 (async()=>{
-    await create()
+    await where()
 })()
 
 
