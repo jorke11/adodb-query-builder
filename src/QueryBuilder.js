@@ -83,6 +83,17 @@ class QueryBuilder {
         })
     }
 
+    static async whereRaw(conditionals) {
+        let wh = `WHERE ${conditionals}`
+
+        this.query = `SELECT * FROM ${this.tableName} ${wh};`;
+        console.log('this.query',this.query);
+        return await ConnectDB.connection.query(this.query)
+        .catch(err=>{
+            console.log('err',err);
+        })
+    }
+
     static async whereBetween(conditionals,order_by=[]) {
         
         let field = Object.keys(conditionals)[0];

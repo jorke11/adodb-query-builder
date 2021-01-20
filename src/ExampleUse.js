@@ -28,6 +28,11 @@ async function where(){
     //console.log('order',order);
 }
 
+async function whereRaw(){
+    let order = await OrderHeaders.whereRaw('OrderID=127074');
+    console.log('order',order);
+}
+
 
 async function create(){
     let order = new OrderHeaders();
@@ -38,7 +43,7 @@ async function create(){
 }
 
 (async()=>{
-    await where()
+    await whereRaw()
 })()
 
 
