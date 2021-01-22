@@ -56,16 +56,12 @@ class QueryBuilder {
         query += 'values ' + values
 
         this.query = `INSERT INTO ${this.constructor.tableName} ${query};`
-        console.log('this.query',this.query)
         const result = await ConnectDB.connection.execute(this.query,"SELECT @@Identity as id")
         .catch(err=>{
             console.log('err',err);
         })
 
         return result[0].id
-        
-        
-
     }
 
     static async where(conditionals) {
@@ -76,7 +72,6 @@ class QueryBuilder {
         }
 
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
-        console.log('this.query',this.query);
         return await ConnectDB.connection.query(this.query)
         .catch(err=>{
             console.log('err',err);
@@ -87,7 +82,6 @@ class QueryBuilder {
         let wh = `WHERE ${conditionals}`
 
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
-        console.log('this.query',this.query);
         return await ConnectDB.connection.query(this.query)
         .catch(err=>{
             console.log('err',err);
@@ -114,7 +108,6 @@ class QueryBuilder {
         let wh = `WHERE ${field} >= #${conditionals[field].start}# and ${field}<=#${conditionals[field].end}#`
     
         this.query = `SELECT * FROM ${this.tableName} ${wh} ${orderBy};`;
-        console.log('this.query',this.query);
 
         return await ConnectDB.connection.query(this.query)
         .catch(err=>{
@@ -130,7 +123,6 @@ class QueryBuilder {
         }
 
         this.query = `SELECT * FROM ${this.tableName} ${wh};`;
-        console.log('this.query',this.query);
         let result = await ConnectDB.connection.query(this.query)
         .catch(err=>{
             console.log('err',err);
@@ -158,7 +150,6 @@ class QueryBuilder {
         }
 
         this.query = `UPDATE ${tableName} SET ${setValues} ${wh}`
-        console.log('this.query',this.query);
         await ConnectDB.connection.execute(this.query)
         .catch(err=>{
             console.log('err',err);
